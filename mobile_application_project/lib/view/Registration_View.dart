@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_application_project/view/Login_view.dart';
 
-class LoginView extends StatefulWidget {
+class RegistrationView extends StatefulWidget {
   @override
-  State<LoginView> createState() => _LoginScreenState();
+  _RegistrationViewState createState() => _RegistrationViewState();
 }
 
-class _LoginScreenState extends State<LoginView> {
+class _RegistrationViewState extends State<RegistrationView> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController teamNameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  bool rememberMe = false;
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
   bool _passwordVisible = false;
 
   @override
@@ -18,26 +21,30 @@ class _LoginScreenState extends State<LoginView> {
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 48.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: 60.0),
-
-              // Logo
+              // Header
               Text(
                 'SportsSync',
                 style: TextStyle(
-                  fontFamily: 'Cursive', // Adjust font if needed
+                  fontFamily: 'Cursive', // Updated to match LoginView font
                   fontSize: 32.0,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 40.0),
+              SizedBox(height: 16.0),
 
-              // Welcome Text
+              // Logo
+              Image.asset(
+                'assets/icons/logo.png', // Replace with your actual asset path
+                height: 100.0,
+              ),
+              SizedBox(height: 24.0),
+
               Text(
-                'Welcome to SportsSync',
+                'Create Your Team Account',
                 style: TextStyle(
                   fontSize: 24.0,
                   fontWeight: FontWeight.bold,
@@ -46,7 +53,7 @@ class _LoginScreenState extends State<LoginView> {
               ),
               SizedBox(height: 8.0),
               Text(
-                'Login to access your team dashboard',
+                'Join SportsSync to manage your team effectively',
                 style: TextStyle(
                   fontSize: 16.0,
                   color: Colors.grey[600],
@@ -63,17 +70,39 @@ class _LoginScreenState extends State<LoginView> {
                     // Team Name Input
                     TextFormField(
                       controller: teamNameController,
-                      textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
                         labelText: 'Team Name',
+                        hintText: 'Enter your team name',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                       ),
-                      autofillHints: [AutofillHints.username],
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your team name';
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 16.0),
+
+                    // Email Input
+                    TextFormField(
+                      controller: emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: InputDecoration(
+                        labelText: 'Email Address',
+                        hintText: 'Enter your email address',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your email address';
+                        } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+\$')
+                            .hasMatch(value)) {
+                          return 'Please enter a valid email address';
                         }
                         return null;
                       },
@@ -86,6 +115,7 @@ class _LoginScreenState extends State<LoginView> {
                       obscureText: !_passwordVisible,
                       decoration: InputDecoration(
                         labelText: 'Password',
+                        hintText: 'Create a password',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.0),
                         ),
@@ -102,10 +132,33 @@ class _LoginScreenState extends State<LoginView> {
                           },
                         ),
                       ),
-                      autofillHints: [AutofillHints.password],
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter your password';
+                          return 'Please create a password';
+                        } else if (value.length < 6) {
+                          return 'Password must be at least 6 characters';
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 16.0),
+
+                    // Confirm Password Input
+                    TextFormField(
+                      controller: confirmPasswordController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        labelText: 'Confirm Password',
+                        hintText: 'Confirm your password',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please confirm your password';
+                        } else if (value != passwordController.text) {
+                          return 'Passwords do not match';
                         }
                         return null;
                       },
@@ -113,40 +166,9 @@ class _LoginScreenState extends State<LoginView> {
                   ],
                 ),
               ),
-              SizedBox(height: 8.0),
-
-              // Remember Me and Forgot Password
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Checkbox(
-                        value: rememberMe,
-                        onChanged: (value) {
-                          setState(() {
-                            rememberMe = value ?? false;
-                          });
-                        },
-                      ),
-                      Text('Remember me'),
-                    ],
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      // Navigate to Forgot Password screen
-                      print('Forgot password pressed');
-                    },
-                    child: Text(
-                      'Forgot password?',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                ],
-              ),
               SizedBox(height: 24.0),
 
-              // Sign In Button
+              // Create Account Button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -159,16 +181,15 @@ class _LoginScreenState extends State<LoginView> {
                   ),
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      // Handle login logic
-                      print('Login successful');
-                    } else {
+                      // Handle registration logic here
+                      print('Account created successfully');
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Please fill out all fields')),
+                        SnackBar(content: Text('Account created successfully')),
                       );
                     }
                   },
                   child: Text(
-                    'Sign In',
+                    'Create Account',
                     style: TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
@@ -179,18 +200,21 @@ class _LoginScreenState extends State<LoginView> {
               ),
               SizedBox(height: 16.0),
 
-              // Register Link
+              // Sign In Link
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Don\'t have an account? '),
+                  Text('Already have an account? '),
                   GestureDetector(
                     onTap: () {
-                      // Navigate to Registration screen
-                      print('Register here pressed');
+                      // Navigate to sign-in screen
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => LoginView()),
+                      );
                     },
                     child: Text(
-                      'Register here',
+                      'Sign in here',
                       style: TextStyle(
                         color: Colors.blue,
                         fontWeight: FontWeight.bold,
@@ -199,7 +223,6 @@ class _LoginScreenState extends State<LoginView> {
                   ),
                 ],
               ),
-              SizedBox(height: 40.0),
             ],
           ),
         ),

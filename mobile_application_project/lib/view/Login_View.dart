@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_application_project/view/Registration_View.dart';
 
-class RegistrationView extends StatefulWidget {
+class LoginView extends StatefulWidget {
   @override
-  _RegistrationViewState createState() => _RegistrationViewState();
+  State<LoginView> createState() => _LoginScreenState();
 }
 
-class _RegistrationViewState extends State<RegistrationView> {
+class _LoginScreenState extends State<LoginView> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController teamNameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  bool rememberMe = false;
   bool _passwordVisible = false;
 
   @override
@@ -19,22 +19,33 @@ class _RegistrationViewState extends State<RegistrationView> {
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 48.0),
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Logo and Header
+              SizedBox(height: 60.0),
+
+              // App Name
               Text(
                 'SportsSync',
                 style: TextStyle(
+                  fontFamily: 'Cursive', // Adjust font if needed
                   fontSize: 32.0,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
                 ),
               ),
-              SizedBox(height: 24.0),
+              SizedBox(height: 16.0),
+
+              // Logo
+              Image.asset(
+                'assets/icons/logo.png', // Replace with the correct path
+                height: 80.0,
+              ),
+              SizedBox(height: 40.0),
+
+              // Welcome Text
               Text(
-                'Create Your Team Account',
+                'Welcome to SportsSync',
                 style: TextStyle(
                   fontSize: 24.0,
                   fontWeight: FontWeight.bold,
@@ -43,7 +54,7 @@ class _RegistrationViewState extends State<RegistrationView> {
               ),
               SizedBox(height: 8.0),
               Text(
-                'Join SportsSync to manage your team effectively',
+                'Login to access your team dashboard',
                 style: TextStyle(
                   fontSize: 16.0,
                   color: Colors.grey[600],
@@ -60,38 +71,17 @@ class _RegistrationViewState extends State<RegistrationView> {
                     // Team Name Input
                     TextFormField(
                       controller: teamNameController,
+                      textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
                         labelText: 'Team Name',
-                        hintText: 'Enter your team name',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                       ),
+                      autofillHints: [AutofillHints.username],
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your team name';
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 16.0),
-
-                    // Email Input
-                    TextFormField(
-                      controller: emailController,
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: InputDecoration(
-                        labelText: 'Email Address',
-                        hintText: 'Enter your email address',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your email address';
-                        } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+\$').hasMatch(value)) {
-                          return 'Please enter a valid email address';
                         }
                         return null;
                       },
@@ -104,7 +94,6 @@ class _RegistrationViewState extends State<RegistrationView> {
                       obscureText: !_passwordVisible,
                       decoration: InputDecoration(
                         labelText: 'Password',
-                        hintText: 'Create a password',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.0),
                         ),
@@ -121,33 +110,10 @@ class _RegistrationViewState extends State<RegistrationView> {
                           },
                         ),
                       ),
+                      autofillHints: [AutofillHints.password],
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please create a password';
-                        } else if (value.length < 6) {
-                          return 'Password must be at least 6 characters';
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 16.0),
-
-                    // Confirm Password Input
-                    TextFormField(
-                      controller: confirmPasswordController,
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        labelText: 'Confirm Password',
-                        hintText: 'Confirm your password',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please confirm your password';
-                        } else if (value != passwordController.text) {
-                          return 'Passwords do not match';
+                          return 'Please enter your password';
                         }
                         return null;
                       },
@@ -155,9 +121,40 @@ class _RegistrationViewState extends State<RegistrationView> {
                   ],
                 ),
               ),
+              SizedBox(height: 8.0),
+
+              // Remember Me and Forgot Password
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Checkbox(
+                        value: rememberMe,
+                        onChanged: (value) {
+                          setState(() {
+                            rememberMe = value ?? false;
+                          });
+                        },
+                      ),
+                      Text('Remember me'),
+                    ],
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      // Navigate to Forgot Password screen
+                      print('Forgot password pressed');
+                    },
+                    child: Text(
+                      'Forgot password?',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                ],
+              ),
               SizedBox(height: 24.0),
 
-              // Create Account Button
+              // Sign In Button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -170,15 +167,16 @@ class _RegistrationViewState extends State<RegistrationView> {
                   ),
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      // Handle registration logic here
-                      print('Account created successfully');
+                      // Handle login logic
+                      print('Login successful');
+                    } else {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Account created successfully')),
+                        SnackBar(content: Text('Please fill out all fields')),
                       );
                     }
                   },
                   child: Text(
-                    'Create Account',
+                    'Sign In',
                     style: TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
@@ -189,19 +187,23 @@ class _RegistrationViewState extends State<RegistrationView> {
               ),
               SizedBox(height: 16.0),
 
-              // Sign In Link
+              // Register Link
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Already have an account? '),
+                  Text('Don\'t have an account? '),
                   GestureDetector(
                     onTap: () {
-                      // Navigate to sign-in screen
-                      print('Navigate to sign-in');
+                      // Navigate to RegistrationView
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => RegistrationView()),
+                      );
                     },
                     child: Text(
-                      'Sign in here',
-                      style: TextStyle( 
+                      'Register here',
+                      style: TextStyle(
                         color: Colors.blue,
                         fontWeight: FontWeight.bold,
                       ),
@@ -209,6 +211,7 @@ class _RegistrationViewState extends State<RegistrationView> {
                   ),
                 ],
               ),
+              SizedBox(height: 40.0),
             ],
           ),
         ),
