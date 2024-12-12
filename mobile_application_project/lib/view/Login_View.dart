@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_application_project/view/Home_View.dart';
 import 'package:mobile_application_project/view/Registration_View.dart';
 
 class LoginView extends StatefulWidget {
@@ -169,6 +170,13 @@ class _LoginScreenState extends State<LoginView> {
                     if (_formKey.currentState!.validate()) {
                       // Handle login logic
                       print('Login successful');
+                      // Navigate to DashboardView
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => HomeView(),
+                        ),
+                      );
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('Please fill out all fields')),
