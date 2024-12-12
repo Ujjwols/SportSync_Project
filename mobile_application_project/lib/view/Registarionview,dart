@@ -201,7 +201,7 @@ class _RegistrationViewState extends State<RegistrationView> {
                     },
                     child: Text(
                       'Sign in here',
-                      style: TextStyle(
+                      style: TextStyle( 
                         color: Colors.blue,
                         fontWeight: FontWeight.bold,
                       ),
