@@ -37,11 +37,13 @@ class _RegistrationViewState extends State<RegistrationView> {
               SizedBox(height: 16.0),
 
               // Logo
-              Image.asset(
-                'assets/icons/logo.png', // Replace with your actual asset path
-                height: 100.0,
+              CircleAvatar(
+                radius: 60.0, // Adjust radius to control size
+                backgroundColor: Colors.grey[200],
+                backgroundImage: AssetImage(
+                    'assets/icons/logo.png'), // Replace with correct path
               ),
-              SizedBox(height: 24.0),
+              SizedBox(height: 40.0),
 
               Text(
                 'Create Your Team Account',
@@ -218,6 +220,7 @@ class _RegistrationViewState extends State<RegistrationView> {
                       style: TextStyle(
                         color: Colors.blue,
                         fontWeight: FontWeight.bold,
+                        fontSize: 17,
                       ),
                     ),
                   ),

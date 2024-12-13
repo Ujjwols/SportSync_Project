@@ -20,30 +20,30 @@ class LandingPage extends StatelessWidget {
               SizedBox(height: 32.0),
 
               // App Logo
-              Center(
-                child: Image.asset(
-                  'assets/icons/logo.png', // Replace with your app logo asset path
-                  height: 120.0,
-                ),
+              CircleAvatar(
+                radius: 60.0, // Adjust radius to control size
+                backgroundColor: Colors.grey[200],
+                backgroundImage: AssetImage(
+                    'assets/icons/logo.png'), // Replace with correct path
               ),
-              SizedBox(height: 24.0),
+              SizedBox(height: 40.0),
 
               // Welcome Text
               Text(
                 'Welcome to SportsSync',
                 style: TextStyle(
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
+                    fontSize: 28.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                    fontFamily: 'cursive'),
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 8.0),
               Text(
                 'Manage your team, find matches, and connect with other teams effortlessly.',
                 style: TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.grey[600],
+                  fontSize: 17.0,
+                  color: Colors.black,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -120,6 +120,7 @@ class LandingPage extends StatelessWidget {
                       style: TextStyle(
                         color: Colors.blue,
                         fontWeight: FontWeight.bold,
+                        fontSize: 17,
                       ),
                     ),
                   ),

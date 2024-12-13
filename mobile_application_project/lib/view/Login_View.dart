@@ -38,9 +38,11 @@ class _LoginScreenState extends State<LoginView> {
               SizedBox(height: 16.0),
 
               // Logo
-              Image.asset(
-                'assets/icons/logo.png', // Replace with the correct path
-                height: 80.0,
+              CircleAvatar(
+                radius: 60.0, // Adjust radius to control size
+                backgroundColor: Colors.grey[200],
+                backgroundImage: AssetImage(
+                    'assets/icons/logo.png'), // Replace with correct path
               ),
               SizedBox(height: 40.0),
 
@@ -214,6 +216,7 @@ class _LoginScreenState extends State<LoginView> {
                       style: TextStyle(
                         color: Colors.blue,
                         fontWeight: FontWeight.bold,
+                        fontSize: 17,
                       ),
                     ),
                   ),
