@@ -1,178 +1,165 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_application_project/view/Registration_View.dart';
+import 'package:mobile_application_project/view/Splash_View.dart';
 
-class LandingPage extends StatelessWidget {
+class LandingView extends StatefulWidget {
+  @override
+  _OnboardingScreenState createState() => _OnboardingScreenState();
+}
+
+class _OnboardingScreenState extends State<LandingView> {
+  final PageController _pageController = PageController();
+  int _currentIndex = 0;
+
+  final List<Map<String, String>> _onboardingData = [
+    {
+      'title': 'Welcome to SportsSync',
+      'description':
+          'Manage your team, find matches, and connect effortlessly.',
+      'image': 'assets/images/logoe.png',
+    },
+    {
+      'title': 'Create Team Profiles',
+      'description':
+          'Easily create and manage team profiles for your sports needs.',
+      'image': 'assets/images/Teams.png',
+    },
+    {
+      'title': 'Find Matches',
+      'description':
+          'Connect with other teams and arrange matches at suitable venues.',
+      'image': 'assets/images/connect.jpg',
+    },
+    {
+      'title': 'Team Communication',
+      'description': 'Chat with teams and coordinate matches effortlessly.',
+      'image': 'assets/images/commucation.jpg',
+    },
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text('SportsSync'),
-        centerTitle: true,
-        backgroundColor: Colors.black,
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(height: 32.0),
-
-              // App Logo
-              CircleAvatar(
-                radius: 60.0, // Adjust radius to control size
-                backgroundColor: Colors.grey[200],
-                backgroundImage: AssetImage(
-                    'assets/icons/logo.png'), // Replace with correct path
-              ),
-              SizedBox(height: 40.0),
-
-              // Welcome Text
-              Text(
-                'Welcome to SportsSync',
-                style: TextStyle(
-                    fontSize: 28.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                    fontFamily: 'cursive'),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 8.0),
-              Text(
-                'Manage your team, find matches, and connect with other teams effortlessly.',
-                style: TextStyle(
-                  fontSize: 17.0,
-                  color: Colors.black,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 32.0),
-
-              // Features Section
-              Column(
-                children: [
-                  _buildFeature(
-                    icon: Icons.group,
-                    title: 'Create Team Profiles',
-                    description: 'Easily create and manage team profiles.',
-                  ),
-                  _buildFeature(
-                    icon: Icons.sports_soccer,
-                    title: 'Find Matches',
-                    description:
-                        'Connect with other teams to arrange matches at suitable times and venues.',
-                  ),
-                  _buildFeature(
-                    icon: Icons.chat,
-                    title: 'Team Communication',
-                    description:
-                        'Chat with other teams and coordinate effortlessly.',
-                  ),
-                ],
-              ),
-              SizedBox(height: 32.0),
-
-              // Register Button
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    padding: EdgeInsets.symmetric(vertical: 16.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                  ),
-                  onPressed: () {
-                    // Navigate to Registration Page
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => RegistrationView(),
-                      ),
-                    );
-                  },
-                  child: Text(
-                    'Get Started',
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 16.0),
-
-              // Already Registered Link
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('Already have an account? '),
-                  GestureDetector(
-                    onTap: () {
-                      // Navigate to Login Page
-                      print('Navigate to login');
-                    },
-                    child: Text(
-                      'Login here',
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 17,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 32.0),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  // Feature Widget
-  Widget _buildFeature(
-      {required IconData icon,
-      required String title,
-      required String description}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      body: Column(
         children: [
-          Icon(
-            icon,
-            size: 40.0,
-            color: Colors.black,
-          ),
-          SizedBox(width: 16.0),
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
+            child: PageView.builder(
+              controller: _pageController,
+              onPageChanged: (index) {
+                setState(() {
+                  _currentIndex = index;
+                });
+              },
+              itemCount: _onboardingData.length,
+              itemBuilder: (context, index) {
+                final data = _onboardingData[index];
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        data['image']!,
+                        height: 200.0,
+                      ),
+                      SizedBox(height: 32.0),
+                      Text(
+                        data['title']!,
+                        style: TextStyle(
+                          fontFamily: 'cursive',
+                          fontSize: 40.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 16.0),
+                      Text(
+                        data['description']!,
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          color: Colors.black,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
                   ),
-                ),
-                SizedBox(height: 4.0),
-                Text(
-                  description,
-                  style: TextStyle(
-                    fontSize: 14.0,
-                    color: Colors.grey[600],
-                  ),
-                ),
-              ],
+                );
+              },
             ),
           ),
+
+          // Dots Indicator
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(
+              _onboardingData.length,
+              (index) => Container(
+                margin: EdgeInsets.symmetric(horizontal: 4.0),
+                width: _currentIndex == index ? 12.0 : 8.0,
+                height: 8.0,
+                decoration: BoxDecoration(
+                  color: _currentIndex == index ? Colors.black : Colors.grey,
+                  borderRadius: BorderRadius.circular(4.0),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 24.0),
+
+          // Get Started Button
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black,
+                  padding: EdgeInsets.symmetric(vertical: 16.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+                onPressed: () {
+                  if (_currentIndex == _onboardingData.length - 1) {
+                    // Show SplashScreen before going to RegistrationView
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SplashScreen(
+                          onNext: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => RegistrationView(),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    );
+                  } else {
+                    _pageController.nextPage(
+                      duration: Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                    );
+                  }
+                },
+                child: Text(
+                  _currentIndex == _onboardingData.length - 1
+                      ? 'Get Started'
+                      : 'Next',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 24.0),
         ],
       ),
     );
