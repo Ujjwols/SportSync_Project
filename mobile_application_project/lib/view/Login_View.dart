@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_application_project/view/Home_View.dart';
 import 'package:mobile_application_project/view/Registration_View.dart';
+import 'package:mobile_application_project/view/dashboard_view.dart';
 
 class LoginView extends StatefulWidget {
+  const LoginView({super.key});
+
   @override
   State<LoginView> createState() => _LoginScreenState();
 }
@@ -24,10 +26,10 @@ class _LoginScreenState extends State<LoginView> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(height: 60.0),
+              const SizedBox(height: 60.0),
 
               // App Name
-              Text(
+              const Text(
                 'SportsSync',
                 style: TextStyle(
                   fontFamily: 'Cursive', // Adjust font if needed
@@ -35,19 +37,19 @@ class _LoginScreenState extends State<LoginView> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
 
               // Logo
               CircleAvatar(
                 radius: 60.0, // Adjust radius to control size
                 backgroundColor: Colors.grey[200],
-                backgroundImage: AssetImage(
+                backgroundImage: const AssetImage(
                     'assets/icons/logo.png'), // Replace with correct path
               ),
-              SizedBox(height: 40.0),
+              const SizedBox(height: 40.0),
 
               // Welcome Text
-              Text(
+              const Text(
                 'Welcome to SportsSync',
                 style: TextStyle(
                   fontSize: 24.0,
@@ -55,7 +57,7 @@ class _LoginScreenState extends State<LoginView> {
                   color: Colors.black,
                 ),
               ),
-              SizedBox(height: 8.0),
+              const SizedBox(height: 8.0),
               Text(
                 'Login to access your team dashboard',
                 style: TextStyle(
@@ -64,7 +66,7 @@ class _LoginScreenState extends State<LoginView> {
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 32.0),
+              const SizedBox(height: 32.0),
 
               // Form
               Form(
@@ -81,7 +83,7 @@ class _LoginScreenState extends State<LoginView> {
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                       ),
-                      autofillHints: [AutofillHints.username],
+                      autofillHints: const [AutofillHints.username],
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your team name';
@@ -89,7 +91,7 @@ class _LoginScreenState extends State<LoginView> {
                         return null;
                       },
                     ),
-                    SizedBox(height: 16.0),
+                    const SizedBox(height: 16.0),
 
                     // Password Input
                     TextFormField(
@@ -113,7 +115,7 @@ class _LoginScreenState extends State<LoginView> {
                           },
                         ),
                       ),
-                      autofillHints: [AutofillHints.password],
+                      autofillHints: const [AutofillHints.password],
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your password';
@@ -124,7 +126,7 @@ class _LoginScreenState extends State<LoginView> {
                   ],
                 ),
               ),
-              SizedBox(height: 8.0),
+              const SizedBox(height: 8.0),
 
               // Remember Me and Forgot Password
               Row(
@@ -140,7 +142,7 @@ class _LoginScreenState extends State<LoginView> {
                           });
                         },
                       ),
-                      Text('Remember me'),
+                      const Text('Remember me'),
                     ],
                   ),
                   TextButton(
@@ -148,26 +150,26 @@ class _LoginScreenState extends State<LoginView> {
                       // Navigate to Forgot Password screen
                       print('Forgot password pressed');
                     },
-                    child: Text(
+                    child: const Text(
                       'Forgot password?',
                       style: TextStyle(color: Colors.black),
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 24.0),
+              const SizedBox(height: 24.0),
 
               // Sign In Button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    padding: EdgeInsets.symmetric(vertical: 16.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                  ),
+                      //   backgroundColor: Colors.black,
+                      //   padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      //   shape: const RoundedRectangleBorder(
+                      // borderRadius: BorderRadius.circular(8.0),
+                      //       ),
+                      ),
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       // Handle login logic
@@ -176,42 +178,43 @@ class _LoginScreenState extends State<LoginView> {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => HomeView(),
+                          builder: (context) => const DashboardView(),
                         ),
                       );
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Please fill out all fields')),
+                        const SnackBar(
+                            content: Text('Please fill out all fields')),
                       );
                     }
                   },
-                  child: Text(
+                  child: const Text(
                     'Sign In',
                     style: TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
+                        // fontSize: 16.0,
+                        // fontWeight: FontWeight.bold,
+                        // color: Colors.white,
+                        ),
                   ),
                 ),
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
 
               // Register Link
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Don\'t have an account? '),
+                  const Text('Don\'t have an account? '),
                   GestureDetector(
                     onTap: () {
                       // Navigate to RegistrationView
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => RegistrationView()),
+                            builder: (context) => const RegistrationView()),
                       );
                     },
-                    child: Text(
+                    child: const Text(
                       'Register here',
                       style: TextStyle(
                         color: Colors.blue,
@@ -222,7 +225,7 @@ class _LoginScreenState extends State<LoginView> {
                   ),
                 ],
               ),
-              SizedBox(height: 40.0),
+              const SizedBox(height: 40.0),
             ],
           ),
         ),

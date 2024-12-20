@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_application_project/app_theme/theme_data.dart';
 import 'package:mobile_application_project/view/landing_view.dart';
 
 class MyApp extends StatelessWidget {
@@ -9,6 +10,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: LandingView(),
+      theme: getApplicationTheme(),
     );
   }
 }

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mobile_application_project/view/Login_view.dart';
 
 class RegistrationView extends StatefulWidget {
+  const RegistrationView({super.key});
+
   @override
   _RegistrationViewState createState() => _RegistrationViewState();
 }
@@ -26,7 +28,7 @@ class _RegistrationViewState extends State<RegistrationView> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // Header
-              Text(
+              const Text(
                 'SportsSync',
                 style: TextStyle(
                   fontFamily: 'Cursive', // Updated to match LoginView font
@@ -34,26 +36,27 @@ class _RegistrationViewState extends State<RegistrationView> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
 
               // Logo
               CircleAvatar(
                 radius: 60.0, // Adjust radius to control size
                 backgroundColor: Colors.grey[200],
-                backgroundImage: AssetImage(
+                backgroundImage: const AssetImage(
                     'assets/icons/logo.png'), // Replace with correct path
               ),
-              SizedBox(height: 40.0),
+              const SizedBox(height: 40.0),
 
-              Text(
+              const Text(
                 'Create Your Team Account',
                 style: TextStyle(
                   fontSize: 24.0,
-                  fontWeight: FontWeight.bold,
+                  // fontWeight: FontWeight.bold,
+                  fontFamily: 'Montseraat Bold',
                   color: Colors.black,
                 ),
               ),
-              SizedBox(height: 8.0),
+              const SizedBox(height: 8.0),
               Text(
                 'Join SportsSync to manage your team effectively',
                 style: TextStyle(
@@ -62,7 +65,7 @@ class _RegistrationViewState extends State<RegistrationView> {
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 32.0),
+              const SizedBox(height: 32.0),
 
               // Form
               Form(
@@ -86,7 +89,7 @@ class _RegistrationViewState extends State<RegistrationView> {
                         return null;
                       },
                     ),
-                    SizedBox(height: 16.0),
+                    const SizedBox(height: 16.0),
 
                     // Email Input
                     TextFormField(
@@ -109,7 +112,7 @@ class _RegistrationViewState extends State<RegistrationView> {
                         return null;
                       },
                     ),
-                    SizedBox(height: 16.0),
+                    const SizedBox(height: 16.0),
 
                     // Password Input
                     TextFormField(
@@ -143,7 +146,7 @@ class _RegistrationViewState extends State<RegistrationView> {
                         return null;
                       },
                     ),
-                    SizedBox(height: 16.0),
+                    const SizedBox(height: 16.0),
 
                     // Confirm Password Input
                     TextFormField(
@@ -168,54 +171,56 @@ class _RegistrationViewState extends State<RegistrationView> {
                   ],
                 ),
               ),
-              SizedBox(height: 24.0),
+              const SizedBox(height: 24.0),
 
               // Create Account Button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    padding: EdgeInsets.symmetric(vertical: 16.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                  ),
+                  // style: ElevatedButton.styleFrom(
+                  //   backgroundColor: Colors.black,
+                  //   padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  //   shape: RoundedRectangleBorder(
+                  //     borderRadius: BorderRadius.circular(8.0),
+                  //   ),
+                  // ),
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       // Handle registration logic here
                       print('Account created successfully');
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Account created successfully')),
+                        const SnackBar(
+                            content: Text('Account created successfully')),
                       );
                     }
                   },
-                  child: Text(
+                  child: const Text(
                     'Create Account',
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
+                    // style: TextStyle(
+                    //   fontSize: 16.0,
+                    //   fontWeight: FontWeight.bold,
+                    //   color: Colors.white,
+                    // ),
                   ),
                 ),
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
 
               // Sign In Link
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Already have an account? '),
+                  const Text('Already have an account? '),
                   GestureDetector(
                     onTap: () {
                       // Navigate to sign-in screen
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => LoginView()),
+                        MaterialPageRoute(
+                            builder: (context) => const LoginView()),
                       );
                     },
-                    child: Text(
+                    child: const Text(
                       'Sign in here',
                       style: TextStyle(
                         color: Colors.blue,
