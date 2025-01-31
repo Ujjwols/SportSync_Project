@@ -20,10 +20,19 @@ class NavigateLoginScreenEvent extends RegisterEvent {
   List<Object> get props => [context, destination];
 }
 
+class UploadImage extends RegisterEvent {
+  final File file;
+
+  const UploadImage({
+    required this.file,
+  });
+}
+
 class RegisterTeam extends RegisterEvent {
   final BuildContext context;
   final String teamName;
   final String email;
+  final String? image;
   final String password;
   final String confirmPassword;
 
@@ -31,6 +40,7 @@ class RegisterTeam extends RegisterEvent {
     required this.context,
     required this.teamName,
     required this.email,
+    this.image,
     required this.password,
     required this.confirmPassword,
   });

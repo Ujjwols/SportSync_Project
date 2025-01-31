@@ -8,12 +8,14 @@ import 'package:mobile_application_project/features/auth/domain/repository/auth_
 class RegisterTeamParams extends Equatable {
   final String teamname;
   final String email;
+  final String? image;
   final String password;
   final String confirmpassword;
 
   const RegisterTeamParams(
       {required this.teamname,
       required this.email,
+      this.image,
       required this.password,
       required this.confirmpassword});
 
@@ -21,11 +23,13 @@ class RegisterTeamParams extends Equatable {
   const RegisterTeamParams.initial(
       {required this.teamname,
       required this.email,
+      this.image,
       required this.password,
       required this.confirmpassword});
 
   @override
-  List<Object?> get props => [teamname, email, password, confirmpassword];
+  List<Object?> get props =>
+      [teamname, email, image, password, confirmpassword];
 }
 
 class RegisterUseCase implements UsecaseWithParams<void, RegisterTeamParams> {
@@ -38,6 +42,7 @@ class RegisterUseCase implements UsecaseWithParams<void, RegisterTeamParams> {
     final authEntity = AuthEntity(
       teamName: params.teamname,
       email: params.email,
+      image: params.image,
       password: params.password,
       confirmPassword: params.confirmpassword,
     );

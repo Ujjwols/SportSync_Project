@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "node-http": "^0.0.5"
+  }
+}

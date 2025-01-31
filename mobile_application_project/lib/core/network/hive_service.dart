@@ -36,13 +36,16 @@ class HiveService {
       var team = box.values.firstWhere(
         (element) =>
             element.teamName == teamName && element.password == password,
-        orElse: () => throw Exception("User not found"),
+        orElse: () =>
+            throw Exception("User not found"), // Ensure it throws an exception
       );
       box.close();
-      return team; // return the found team if valid
+      return team;
     } catch (e) {
       box.close();
-      return null; // return null if no user is found
+      return null; // Handle the case when no user is found
     }
   }
+
+  //dulpicate register garna nadene 
 }

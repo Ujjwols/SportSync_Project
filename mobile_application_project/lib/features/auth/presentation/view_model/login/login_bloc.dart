@@ -55,10 +55,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       (event, emit) async {
         emit(state.copyWith(isLoading: true));
 
-        // Perform the login action with the provided credentials
         final result = await _loginUseCase(
           LoginParams(
-            teamName: event.teamName,
+            teamname: event.teamName,
             password: event.password,
           ),
         );
@@ -72,16 +71,23 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
               color: Colors.red,
             );
           },
-          (team) {
-            emit(state.copyWith(isLoading: false, isSuccess: true));
-            add(
-              NavigateHomeScreenEvent(
+          (token) {
+            if (token.isNotEmpty) {
+              emit(state.copyWith(isLoading: false, isSuccess: true));
+              add(
+                NavigateHomeScreenEvent(
+                  context: event.context,
+                  destination: const HomeView(),
+                ),
+              );
+            } else {
+              emit(state.copyWith(isLoading: false, isSuccess: false));
+              showMySnackBar(
                 context: event.context,
-                destination: const HomeView(),
-              ),
-            );
-            // You can store or process the token and user data here
-            //_homeCubit.setToken(token);
+                message: "Invalid token received",
+                color: Colors.red,
+              );
+            }
           },
         );
       },
