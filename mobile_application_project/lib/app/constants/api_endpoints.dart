@@ -3,12 +3,25 @@ class ApiEndpoints {
 
   static const Duration connectionTimeout = Duration(seconds: 60);
   static const Duration receiveTimeout = Duration(seconds: 60);
-  static const String baseUrl = "http://10.0.2.2:3000/api/";
+  static const String baseUrl = "http://10.0.2.2:5000/api/";
 
   //===============================AuthRoutes===============================//
 
-  static const String login = "auth/login";
-  static const String register = "auth/register";
+  static const String login = "users/login";
+  static const String signup = "users/signup";
+  static const String update = "users/update/";
+  static const String suggested = "users/suggested";
+  static const String follow = "users/follow/";
+
   // static const String refreshToken = "auth/refresh_token";
-  static const String uploadImage = "auth/uploadImage";
+  // static const String uploadImage = "auth/uploadImage";
+
+//==============================postroutes==============================//
+  static const String getfeed = "posts/feed";
+  static const String getpostbyid = "posts/";
+  static const String getuserpost = "posts/user/";
+  static const String createpost = "posts/create";
+  static const String deletepost = "posts/";
+  static const String likepost = "posts/like/";
+  static const String replypost = "posts/reply/";
 }
