@@ -1,48 +1,27 @@
-import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:mobile_application_project/features/home/presentation/view/AccountPage.dart';
+import 'package:mobile_application_project/features/home/presentation/view/MessagePage.dart';
+import 'package:mobile_application_project/features/matchpost/presentation/view/add_matchpost_view.dart';
+import 'package:mobile_application_project/features/post/presentation/view/add_post.dart';
+import 'package:mobile_application_project/features/post/presentation/view/get_post.dart';
 
-class HomeState extends Equatable {
+class HomeState {
   final int selectedIndex;
+  final String userId;
   final List<Widget> views;
+  HomeState({required this.selectedIndex, required this.userId})
+      : views = [
+          const FeedPage(),
+          CreatePostView(userId: userId),
+          CreateMatchPostView(userId: userId), // No BlocProvider here
+          const MessagePage(),
+          const AccountPage(),
+        ];
 
-  const HomeState({
-    required this.selectedIndex,
-    required this.views,
-  });
-
-  // Initial state
-  static HomeState initial() {
-    return const HomeState(
-      selectedIndex: 0,
-      views: [
-        Center(
-          child: Text('Dashboard'),
-        ),
-        // BlocProvider(
-        //   create: (context) => getIt<CourseBloc>(),
-        //   child: CourseView(),
-        // ),
-        // BlocProvider(
-        //   create: (context) => getIt<BatchBloc>(),
-        //   child: BatchView(),
-        // ),
-        Center(
-          child: Text('Account'),
-        ),
-      ],
-    );
-  }
-
-  HomeState copyWith({
-    int? selectedIndex,
-    List<Widget>? views,
-  }) {
+  HomeState copyWith({int? selectedIndex, String? userId}) {
     return HomeState(
       selectedIndex: selectedIndex ?? this.selectedIndex,
-      views: views ?? this.views,
+      userId: userId ?? this.userId,
     );
   }
-
-  @override
-  List<Object?> get props => [selectedIndex, views];
 }

@@ -1,3 +1,4 @@
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -57,7 +58,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
         final result = await _loginUseCase(
           LoginParams(
-            teamname: event.teamName,
+            username: event.username,
             password: event.password,
           ),
         );

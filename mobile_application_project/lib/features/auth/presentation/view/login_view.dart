@@ -8,7 +8,7 @@ class LoginView extends StatelessWidget {
   LoginView({super.key});
 
   final _formKey = GlobalKey<FormState>();
-  final _teamnameController = TextEditingController();
+  final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
 
   final _gap = const SizedBox(height: 8);
@@ -106,17 +106,17 @@ class LoginView extends StatelessWidget {
                       children: [
                         // Team Name (Username) Input
                         TextFormField(
-                          controller: _teamnameController,
+                          controller: _usernameController,
                           textInputAction: TextInputAction.next,
                           decoration: InputDecoration(
-                            labelText: 'Teamname',
+                            labelText: 'Username',
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8.0),
                             ),
                           ),
                           validator: (value) {
                             if (value!.isEmpty) {
-                              return 'Please enter Teamname';
+                              return 'Please enter Username';
                             }
                             return null;
                           },
@@ -154,7 +154,7 @@ class LoginView extends StatelessWidget {
                           context.read<LoginBloc>().add(
                                 LoginTeamEvent(
                                   context: context,
-                                  teamName: _teamnameController.text,
+                                  username: _usernameController.text,
                                   password: _passwordController.text,
                                 ),
                               );
@@ -191,7 +191,7 @@ class LoginView extends StatelessWidget {
                               );
                         },
                         child: const Text(
-                          'Register here',
+                          'Register',
                           style: TextStyle(
                             color: Colors.blue,
                             fontWeight: FontWeight.bold,

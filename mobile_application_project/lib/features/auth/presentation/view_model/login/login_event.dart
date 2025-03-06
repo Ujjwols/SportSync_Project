@@ -35,12 +35,12 @@ class NavigateHomeScreenEvent extends LoginEvent {
 
 class LoginTeamEvent extends LoginEvent {
   final BuildContext context;
-  final String teamName;
+  final String username;
   final String password;
 
   const LoginTeamEvent({
     required this.context,
-    required this.teamName,
+    required this.username,
     required this.password,
   });
 }

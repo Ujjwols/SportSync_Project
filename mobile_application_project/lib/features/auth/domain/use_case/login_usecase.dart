@@ -6,35 +6,37 @@ import 'package:mobile_application_project/core/error/failure.dart';
 import 'package:mobile_application_project/features/auth/domain/repository/auth_repository.dart';
 
 class LoginParams extends Equatable {
-  final String teamname;
+  final String username;
   final String password;
 
   const LoginParams({
-    required this.teamname,
+    required this.username,
     required this.password,
   });
 
   // Initial Constructor
   const LoginParams.initial()
-      : teamname = '',
+      : username = '',
         password = '';
 
   @override
-  List<Object> get props => [teamname, password];
+  List<Object> get props => [username, password];
 }
 
-class LoginUseCase implements UsecaseWithParams<String, LoginParams> {
-  final IAuthRepository repository;
+class LoginUseCase
+    implements UsecaseWithParams<Map<String, dynamic>, LoginParams> {
+  final IUserRepository repository;
   final TokenSharedPrefs tokenSharedPrefs;
 
   LoginUseCase(this.repository, this.tokenSharedPrefs);
 
   @override
-  Future<Either<Failure, String>> call(LoginParams params) async {
-    final result = await repository.loginTeam(params.teamname, params.password);
+  Future<Either<Failure, Map<String, dynamic>>> call(LoginParams params) async {
+    final result = await repository.loginUser(params.username, params.password);
     return result.fold(
       (failure) => Left(failure),
-      (token) async {
+      (data) async {
+        final token = data['token']; // Extract the token from the Map
         final saveResult = await tokenSharedPrefs.saveToken(token);
         if (saveResult.isLeft()) {
           return Left(saveResult.fold(
@@ -45,8 +47,8 @@ class LoginUseCase implements UsecaseWithParams<String, LoginParams> {
 
         // Ensure that the token is retrieved correctly after saving
         final tokenResult = await tokenSharedPrefs.getToken();
-        return tokenResult.fold(
-            (failure) => Left(failure), (savedToken) => Right(savedToken));
+        return tokenResult.fold((failure) => Left(failure),
+            (savedToken) => Right(data)); // Return the entire Map
       },
     );
   }
