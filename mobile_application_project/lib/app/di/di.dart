@@ -13,6 +13,14 @@ import 'package:mobile_application_project/features/auth/presentation/view_model
 import 'package:mobile_application_project/features/auth/presentation/view_model/signup/register_bloc.dart';
 import 'package:mobile_application_project/features/auth/presentation/view_model/update/update_bloc.dart';
 import 'package:mobile_application_project/features/home/presentation/view_model/home_cubit.dart';
+import 'package:mobile_application_project/features/matchpost/data/data_source/matchpost_remote_data_source/matchpost_remote_data_source.dart';
+import 'package:mobile_application_project/features/matchpost/data/repository/matchpost_remote_repository.dart';
+import 'package:mobile_application_project/features/matchpost/domain/usecase/creatematchpost_usecase.dart';
+import 'package:mobile_application_project/features/matchpost/domain/usecase/deletematchpost_usecase.dart';
+import 'package:mobile_application_project/features/matchpost/domain/usecase/getmatchpost_usecase.dart';
+import 'package:mobile_application_project/features/matchpost/domain/usecase/getmatchpostbyid_usecase.dart';
+import 'package:mobile_application_project/features/matchpost/domain/usecase/getmatchpostbyusername_usecase.dart';
+import 'package:mobile_application_project/features/matchpost/presentation/view_model/matchpost_bloc.dart';
 import 'package:mobile_application_project/features/post/data/data_source/post_remote_data_source.dart/post_remote_data_source.dart';
 import 'package:mobile_application_project/features/post/data/repository/post_remote_repository.dart';
 import 'package:mobile_application_project/features/post/domain/use_case/createpost_usecase.dart';
@@ -42,6 +50,7 @@ Future<void> initDependencies() async {
 
   // Add Post dependencies
   await _initPostDependencies();
+  await _initMatchPostDependencies();
 
   await _initUpdateDependencies();
   // Add Cloudinary
@@ -141,6 +150,59 @@ Future<void> _initPostDependencies() async {
       getUserPostUseCase: getIt(),
       likeUnlikePostUseCase: getIt(),
       replyToPostUseCase: getIt(),
+    ),
+  );
+}
+
+//MatchPost
+// Add this function to initialize Post-related dependencies
+Future<void> _initMatchPostDependencies() async {
+  // Register matchPostRemoteDataSource
+  getIt.registerLazySingleton<MatchpostRemoteDataSource>(
+    () => MatchpostRemoteDataSource(
+      dio: getIt<Dio>(), // Pass the Dio instance
+      cloudinary: getIt<Cloudinary>(),
+      tokenSharedPrefs:
+          getIt<TokenSharedPrefs>(), // Pass the Cloudinary instance
+    ),
+  );
+
+  // Register PostRemoteRepository
+  getIt.registerLazySingleton<MatchpostRemoteRepository>(
+    () => MatchpostRemoteRepository(getIt<MatchpostRemoteDataSource>()),
+  );
+  // Register all Post-related use cases
+  getIt.registerLazySingleton<CreateMatchPostUseCase>(
+    () => CreateMatchPostUseCase(
+      repository:
+          getIt<MatchpostRemoteRepository>(), // Pass PostRemoteRepository
+      tokenSharedPrefs: getIt<TokenSharedPrefs>(), // Pass UserSharedPrefs
+    ),
+  );
+
+  getIt.registerLazySingleton<DeleteMatchPostUseCase>(
+    () => DeleteMatchPostUseCase(getIt<MatchpostRemoteRepository>()),
+  );
+
+  getIt.registerLazySingleton<GetMatchFeedUseCase>(
+    () => GetMatchFeedUseCase(getIt<MatchpostRemoteRepository>()),
+  );
+
+  getIt.registerLazySingleton<GetMatchPostByIdUseCase>(
+    () => GetMatchPostByIdUseCase(getIt<MatchpostRemoteRepository>()),
+  );
+
+  getIt.registerLazySingleton<GetUserMatchPostUseCase>(
+    () => GetUserMatchPostUseCase(getIt<MatchpostRemoteRepository>()),
+  );
+
+  getIt.registerFactory<MatchpostBloc>(
+    () => MatchpostBloc(
+      createMatchPostUseCase: getIt(),
+      deleteMatchPostUseCase: getIt(),
+      getMatchFeedUseCase: getIt(),
+      getMatchPostByIdUseCase: getIt(),
+      getUserMatchPostUseCase: getIt(),
     ),
   );
 }

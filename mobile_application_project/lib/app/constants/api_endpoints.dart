@@ -5,6 +5,8 @@ class ApiEndpoints {
   static const Duration receiveTimeout = Duration(seconds: 60);
   static const String baseUrl = "http://10.0.2.2:5000/api/";
 
+  // static const String baseUrl = "http://10.1.20.184:5000/api/";
+
   //===============================AuthRoutes===============================//
 
   static const String login = "users/login";
@@ -24,4 +26,11 @@ class ApiEndpoints {
   static const String deletepost = "posts/";
   static const String likepost = "posts/like/";
   static const String replypost = "posts/reply/";
+
+  //==============================MatchPostRoutes==============================//
+  static const String getMatchFeed = "matchpost/matchfeed";
+  static const String getMatchPostById = "matchpost/";
+  static const String getUserMatchPost = "matchpost/user/";
+  static const String createMatchPost = "matchpost/create";
+  static const String deleteMatchPost = "matchpost/";
 }

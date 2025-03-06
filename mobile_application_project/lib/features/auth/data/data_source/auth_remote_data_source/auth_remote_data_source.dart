@@ -1,101 +1,192 @@
-import 'dart:io';
-
-import 'package:dio/dio.dart';
+import 'package:cloudinary/cloudinary.dart';
+import 'package:dartz/dartz.dart';
 import 'package:mobile_application_project/app/constants/api_endpoints.dart';
+import 'package:mobile_application_project/app/shared_prefs/token_shared_prefs.dart';
+import 'package:mobile_application_project/core/error/failure.dart';
 import 'package:mobile_application_project/features/auth/data/data_source/auth_data_source.dart';
-import 'package:mobile_application_project/features/auth/domain/entity/auth_entity.dart';
+import 'package:mobile_application_project/features/auth/data/model/user_api_model.dart';
+import 'package:mobile_application_project/features/auth/domain/entity/user_entity.dart';
 
 class AuthRemoteDataSource implements IAuthDataSource {
   final Dio _dio;
+  final TokenSharedPrefs _tokenSharedPrefs;
+  final Cloudinary _cloudinary;
 
-  AuthRemoteDataSource(this._dio);
+  AuthRemoteDataSource(this._dio, this._tokenSharedPrefs, this._cloudinary);
 
   @override
-  Future<void> registerTeam(AuthEntity team) async {
+  Future<String?> uploadImage(String imagePath) async {
     try {
-      Response response = await _dio.post(
-        ApiEndpoints.register,
-        data: {
-          "teamname": team.teamName,
-          "email": team.email,
-          "image": team.image,
-          "password": team.password,
-        },
+      final response = await _cloudinary.upload(
+        file: imagePath,
+        resourceType: CloudinaryResourceType.image,
       );
-
-      if (response.statusCode == 200) {
-        return;
-      } else {
-        throw Exception(response.statusMessage);
-      }
-    } on DioException catch (e) {
-      throw Exception(e);
+      return response.secureUrl;
     } catch (e) {
-      throw Exception(e);
+      return null;
     }
   }
 
   @override
-  Future<AuthEntity> getCurrentTeam() {
+  Future<void> registerUser(UserEntity user) async {
+    try {
+      Response response = await _dio.post(
+        ApiEndpoints.signup,
+        data: {
+          "name": user.name,
+          "username": user.username,
+          "email": user.email,
+          "password": user.password,
+        },
+      );
+
+      if (response.statusCode == 201) {
+        // Registration successful
+        print('User registered: ${response.data}');
+        return;
+      } else {
+        throw Exception('Registration failed: ${response.statusMessage}');
+      }
+    } on DioException catch (e) {
+      throw Exception('Registration failed: ${e.message}');
+    } catch (e) {
+      throw Exception('Unexpected error: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<UserEntity> getUsers() {
     // TODO: implement getCurrentUser
     throw UnimplementedError();
   }
 
   @override
-  Future<String> loginTeam(String teamname, String password) async {
+  Future<Map<String, dynamic>> loginUser(
+      String username, String password) async {
     try {
       Response response = await _dio.post(
         ApiEndpoints.login,
         data: {
-          "teamname": teamname,
+          "username": username,
           "password": password,
         },
       );
 
       if (response.statusCode == 200) {
-        // final token = response
-        //     .data['access_token']; // Ensure this matches the API response
-        return "login sucess";
+        // Extract user details from the response body
+        final responseData = response.data; // Assuming the response is JSON
+        final userDetails = {
+          '_id': responseData['_id'], // User ID for creating posts
+          'name': responseData['name'],
+          'email': responseData['email'],
+          'username': responseData['username'],
+          'bio': responseData['bio'],
+          'profilePic': responseData['profilePic'],
+        };
+
+        // Extract the JWT token from the Set-Cookie header
+        final cookies = response.headers['set-cookie'];
+        if (cookies != null) {
+          for (var cookie in cookies) {
+            if (cookie.contains('jwt=')) {
+              final jwtToken = cookie.split('jwt=')[1].split(';')[0];
+
+              // Save token and user details to TokenSharedPrefs
+              await _tokenSharedPrefs.saveToken(jwtToken);
+              await _tokenSharedPrefs.saveUserDetails(userDetails);
+
+              print('Token saved: $jwtToken'); // Debugging
+              print('User details saved: $userDetails'); // Debugging
+
+              return {
+                'token': jwtToken, // JWT token for authentication
+                'user': userDetails, // User details including userId
+              };
+            }
+          }
+        }
+        throw Exception('JWT token not found in response headers');
       } else {
-        throw Exception(response.statusMessage);
+        throw Exception('Login failed: ${response.statusMessage}');
       }
     } on DioException catch (e) {
-      throw Exception(e);
+      throw Exception('Login failed: ${e.message}');
     } catch (e) {
-      throw Exception(e);
+      throw Exception('Unexpected error: ${e.toString()}');
     }
   }
 
   @override
-  Future<String> uploadProfilePicture(File file) async {
+  Future<Either<Failure, UserApiModel>> updateProfile({
+    required String userId,
+    required String name,
+    required String email,
+    required String username,
+    required String bio,
+    String? profilePic,
+    String? password,
+  }) async {
     try {
-      String fileName = file.path.split('/').last;
-      FormData formData = FormData.fromMap(
-        {
-          'profilePicture': await MultipartFile.fromFile(
-            file.path,
-            filename: fileName,
-          ),
+      // Retrieve the token
+      final tokenResult = await _tokenSharedPrefs.getToken();
+      final token = tokenResult.fold(
+        (failure) {
+          print('Error retrieving token: ${failure.message}');
+          throw Exception('Failed to get token: ${failure.message}');
+        },
+        (token) {
+          print('Retrieved token: $token'); // Debugging
+          return token;
         },
       );
 
-      Response response = await _dio.post(
-        ApiEndpoints.uploadImage,
-        data: formData,
+      // Upload profile picture to Cloudinary if provided
+      String? imageUrl;
+      if (profilePic != null) {
+        imageUrl = await uploadImage(profilePic);
+      }
+
+      // Map the UserEntity to UserApiModel
+      final userApiModel = UserApiModel(
+        id: userId,
+        name: name,
+        email: email,
+        username: username,
+        bio: bio,
+        profilePic: imageUrl,
+        password: password ?? '',
       );
 
-      if (response.statusCode == 200) {
-        // Extract the image name from the response
-        final str = response.data['data'];
+      // Send the data to the backend with the token in the headers
+      final response = await _dio.put(
+        '${ApiEndpoints.update}/$userId',
+        data: userApiModel.toJson(), // Convert to JSON before sending
+        options: Options(
+          headers: {
+            'Authorization':
+                'Bearer $token', // Add the token in the Authorization header
+            'Content-Type':
+                'application/json', // Ensure the content type is set
+          },
+        ),
+      );
 
-        return str;
+      // Handle the response
+      if (response.statusCode == 200) {
+        // Convert the response data to UserApiModel
+        final updatedUser = UserApiModel.fromJson(response.data);
+        return Right(updatedUser);
       } else {
-        throw Exception(response.statusMessage);
+        // Handle non-successful response
+        return Left(ApiFailure(
+            message: 'Failed to update profile: ${response.statusMessage}'));
       }
     } on DioException catch (e) {
-      throw Exception(e);
+      // Handle Dio-specific errors (e.g., network issues, timeouts)
+      return Left(ApiFailure(message: 'Network error: ${e.message}'));
     } catch (e) {
-      throw Exception(e);
+      // Handle other unexpected errors
+      return Left(ApiFailure(message: 'Unexpected error: $e'));
     }
   }
 }
